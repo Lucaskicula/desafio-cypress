@@ -1,53 +1,61 @@
+import { loginPage } from "../pages/LoginPage";
+import { inventoryPage } from "../pages/InventoryPage";
+import { cartPage } from "../pages/CartPage";
+import { checkoutInformationPage } from "../pages/CheckoutInformationPage";
+import { checkoutOverviewPage } from "../pages/CheckoutOverviewPage";
+import { checkoutCompletePage } from "../pages/CheckoutCompletePage";
+
 describe("SauceDemo", () => {
-  it("faz login válido e exibe o catálogo", () => {
-    cy.login();
-    cy.get('[data-cy="product-name"]').should("have.length", 6);
-    cy.get('[data-cy="product-sort"]').should("have.value", "az");
+  beforeEach(function () {
+    cy.fixture("auth").as("auth");
+    cy.fixture("purchase").as("purchase");
+    loginPage.visit();
   });
 
-  it("rejeita credenciais inválidas com mensagem de erro", () => {
-    cy.login("standard_user", "senha_incorreta");
-    cy.get('[data-cy="error-message"]')
-      .should("be.visible")
-      .and("contain.text", "Username and password do not match");
-    cy.get('[data-cy="username"]').should("have.value", "standard_user");
+  it("faz login válido e exibe o catálogo", function () {
+    cy.login(this.auth.valid);
+    inventoryPage.names().should("have.length", this.purchase.catalog.count);
+    inventoryPage.sort().should("have.value", this.purchase.catalog.initialSort);
   });
 
-  it("ordena o catálogo por preço crescente", () => {
-    cy.login();
-    cy.get('[data-cy="product-sort"]').select("lohi");
-    cy.get('[data-cy="product-price"]').then(($prices) => {
+  it("rejeita credenciais inválidas com mensagem de erro", function () {
+    cy.login(this.auth.invalid);
+    loginPage.error().should("be.visible").and("contain.text", this.auth.errorMessage);
+    loginPage.username().should("have.value", this.auth.invalid.username);
+  });
+
+  it("ordena o catálogo por preço crescente", function () {
+    cy.login(this.auth.valid);
+    inventoryPage.sort().select(this.purchase.catalog.priceSort);
+    inventoryPage.prices().should(($prices) => {
       const prices = [...$prices].map((el) => Number(el.innerText.replace("$", "")));
-      expect(prices).to.have.length(6);
+      expect(prices).to.have.length(this.purchase.catalog.count);
       expect(prices).to.deep.equal([...prices].sort((a, b) => a - b));
-      expect(prices[0]).to.equal(7.99);
+      expect(prices[0]).to.equal(this.purchase.catalog.lowestPrice);
     });
   });
 
-  it("adiciona a mochila e valida o conteúdo do carrinho", () => {
-    cy.login();
-    cy.get('[data-cy="add-backpack"]').click();
-    cy.get('[data-cy="cart-badge"]').should("have.text", "1");
-    cy.get('[data-cy="cart-link"]').click();
-    cy.get('[data-cy="cart-item"]').should("have.length", 1);
-    cy.get('[data-cy="cart-item"]').should("contain.text", "Sauce Labs Backpack");
+  it("adiciona a mochila e valida o conteúdo do carrinho", function () {
+    cy.login(this.auth.valid);
+    cy.addBackpack();
+    inventoryPage.badge().should("have.text", String(this.purchase.product.quantity));
+    cy.openCart();
+    cartPage.items().should("have.length", this.purchase.product.quantity)
+      .and("contain.text", this.purchase.product.name);
   });
 
-  it("conclui checkout e valida resumo e confirmação", () => {
-    cy.login();
-    cy.get('[data-cy="add-backpack"]').click();
-    cy.get('[data-cy="cart-link"]').click();
-    cy.get('[data-cy="checkout-button"]').click();
-    cy.get('[data-cy="first-name"]').type("Ana");
-    cy.get('[data-cy="last-name"]').type("Teste");
-    cy.get('[data-cy="postal-code"]').type("01001000");
-    cy.get('[data-cy="continue-button"]').click();
-    cy.get('[data-cy="summary-subtotal"]').should("contain.text", "$29.99");
-    cy.get('[data-cy="summary-total"]').should("contain.text", "$32.39");
-    cy.get('[data-cy="finish-button"]').click();
-    cy.get('[data-cy="complete-header"]')
-      .should("be.visible")
-      .and("have.text", "Thank you for your order!");
+  it("conclui checkout e valida resumo e confirmação", function () {
+    cy.login(this.auth.valid);
+    cy.addBackpack();
+    cy.openCart();
+    cartPage.checkout();
+    checkoutInformationPage.fill(this.purchase.customer);
+    checkoutInformationPage.continue();
+    checkoutOverviewPage.subtotal().should("contain.text", this.purchase.subtotal);
+    checkoutOverviewPage.total().should("contain.text", this.purchase.total);
+    checkoutOverviewPage.finish();
+    checkoutCompletePage.header().should("be.visible")
+      .and("have.text", this.purchase.confirmation);
     cy.screenshot("saucedemo-checkout-confirmacao", { capture: "runner" });
   });
 });

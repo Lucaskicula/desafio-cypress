@@ -1,0 +1,8 @@
+{
+  "catalog": { "count": 6, "initialSort": "az", "priceSort": "lohi", "lowestPrice": 7.99 },
+  "product": { "name": "Sauce Labs Backpack", "quantity": 1 },
+  "customer": { "firstName": "Ana", "lastName": "Teste", "postalCode": "01001000" },
+  "subtotal": "$29.99",
+  "total": "$32.39",
+  "confirmation": "Thank you for your order!"
+}
