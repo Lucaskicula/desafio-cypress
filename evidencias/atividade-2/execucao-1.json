@@ -1,0 +1,59 @@
+{
+  "execution": 1,
+  "cypressVersion": "16.2.0",
+  "browserVersion": "146.0.7680.216",
+  "startedAt": "2026-10-29T01:33:06.475Z",
+  "endedAt": "2026-10-29T01:33:11.461Z",
+  "totalTests": 5,
+  "totalPassed": 5,
+  "totalFailed": 0,
+  "totalPending": 0,
+  "totalSkipped": 0,
+  "specs": [
+    {
+      "spec": "cypress\\e2e\\saucedemo.cy.js",
+      "tests": [
+        {
+          "title": [
+            "SauceDemo",
+            "faz login válido e exibe o catálogo"
+          ],
+          "state": "passed",
+          "attempts": 1
+        },
+        {
+          "title": [
+            "SauceDemo",
+            "rejeita credenciais inválidas com mensagem de erro"
+          ],
+          "state": "passed",
+          "attempts": 1
+        },
+        {
+          "title": [
+            "SauceDemo",
+            "ordena o catálogo por preço crescente"
+          ],
+          "state": "passed",
+          "attempts": 1
+        },
+        {
+          "title": [
+            "SauceDemo",
+            "adiciona a mochila e valida o conteúdo do carrinho"
+          ],
+          "state": "passed",
+          "attempts": 1
+        },
+        {
+          "title": [
+            "SauceDemo",
+            "conclui checkout e valida resumo e confirmação"
+          ],
+          "state": "passed",
+          "attempts": 1
+        }
+      ]
+    }
+  ]
+}

@@ -16,4 +16,17 @@ sincronização por comandos e asserções retentáveis, sem retries de testes.
 
 ## Validação
 
-Pendente: três execuções reais consecutivas da suíte completa.
+Em 28/10/2026 (America/Sao_Paulo), `npm run cy:stable` (equivalente a
+`node scripts/validate-stability.cjs`) executou a suíte real no SauceDemo:
+
+| Rodada | Aprovados | Falhas / pulados | Tentativas por teste |
+| --- | --- | --- | --- |
+| 1 | 5/5 | 0 / 0 | 1 |
+| 2 | 5/5 | 0 / 0 | 1 |
+| 3 | 5/5 | 0 / 0 | 1 |
+
+Cypress 16.2.0, Electron 146 headless, Node 24.22.1; isolamento habilitado.
+Resumos reais em `evidencias/atividade-2/execucao-{1,2,3}.json` e vídeo/captura
+da última rodada na mesma pasta. Os cinco casos TC-01 a TC-05 da A1 foram
+mantidos, incluindo todas as verificações originais. Três rodadas verdes
+comprovam esta execução; o site público continua sendo uma dependência externa.
