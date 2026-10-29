@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "cy:open": "cypress open",
-    "cy:run": "cypress run"
+    "cy:run": "cypress run",
+    "cy:stable": "node scripts/validate-stability.cjs"
   },
   "devDependencies": {
     "cypress": "^16.2.0"

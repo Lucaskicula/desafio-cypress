@@ -11,7 +11,7 @@ Projeto independente para automatizar cinco fluxos do site público
 ## Instalação e execução
 
 ```bash
-npm install
+npm ci
 npm run cy:open
 ```
 
@@ -30,6 +30,23 @@ captura do checkout em
 ## Casos e seletores
 
 Os cinco casos estão em [docs/casos-de-teste.md](docs/casos-de-teste.md).
-As especificações usam exclusivamente seletores `[data-cy="..."]`. Como o
-SauceDemo público expõe `data-test`, o suporte do Cypress cria aliases `data-cy`
-antes dos testes, sem alterar o site.
+Os seletores nativos `data-test` ficam exclusivamente em `cypress/pages/`,
+com um Page Object por tela. Os três comandos em `cypress/support/commands.js`
+reutilizam login, adição da mochila e abertura do carrinho. Dados de entrada
+e resultados esperados ficam em `cypress/fixtures/`; a fixture de autenticação
+atende os cenários de sucesso e falha.
+
+## Atividade 2
+
+O diagnóstico e as soluções estão em [REFATORACAO.md](REFATORACAO.md).
+Para repetir a validação completa três vezes consecutivas:
+
+```bash
+npm run cy:stable
+```
+
+O comando usa Electron, mantém o isolamento dos testes, desabilita retries
+de testes e exige cinco aprovações em cada execução, sem casos pulados.
+Interrompe na primeira falha e salva os resultados em
+`evidencias/atividade-2/execucao-{1,2,3}.json`. As asserções do Cypress
+continuam retentáveis, sem esperas fixas. As evidências antigas acima são da A1.
