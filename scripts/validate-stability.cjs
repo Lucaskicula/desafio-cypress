@@ -34,7 +34,7 @@ async function main() {
     };
     fs.writeFileSync(path.join(directory, `execucao-${execution}.json`),
       JSON.stringify(summary, null, 2) + "\n");
-    if (result.status !== "finished" || result.totalTests !== 5 ||
+    if (result.status === "failed" || result.failures || result.totalTests !== 5 ||
         result.totalPassed !== 5 || result.totalFailed !== 0 ||
         result.totalPending !== 0 || result.totalSkipped !== 0) {
       throw new Error(`Execução ${execution} reprovada; sequência interrompida.`);
